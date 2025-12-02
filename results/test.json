@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "student": "template",
+  "timestamp": "2025-12-02T22:32:49.293850",
+  "prey_score": -189.7698923770478,
+  "prey_std": 206.1652281229723,
+  "predator_score": 26.22,
+  "predator_std": 48.54185410550363,
+  "num_episodes": 500
+}

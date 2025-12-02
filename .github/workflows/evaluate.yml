@@ -111,7 +111,7 @@ jobs:
             --submission-dir "$submission_dir" \
             --private-agents-dir "private_agents" \
             --output "$output_file" \
-            --episodes 100
+            --episodes 500
           
           echo "output_file=$output_file" >> $GITHUB_OUTPUT
       
@@ -169,13 +169,13 @@ jobs:
             
             ### Scores
             
-            | Agent Type | Score | Std Dev |
-            |------------|-------|---------|
-            | 🐰 Prey | ${parseFloat(preyScore).toFixed(4)} | ±${parseFloat(preyStd).toFixed(4)} |
-            | 🦁 Predator | ${parseFloat(predatorScore).toFixed(4)} | ±${parseFloat(predatorStd).toFixed(4)} |
+            | Agent Type | Score |
+            |------------|-------|
+            | 🐰 Prey | ${parseFloat(preyScore).toFixed(4)} |
+            | 🦁 Predator | ${parseFloat(predatorScore).toFixed(4)} |
             
             ### Details
-            - **Episodes:** 100
+            - **Episodes:** 500
             - **Environment:** Simple Tag (PettingZoo MPE)
             - **Combined Score:** ${((parseFloat(preyScore) + parseFloat(predatorScore)) / 2).toFixed(4)}
             
@@ -188,7 +188,7 @@ jobs:
             Want to improve your score? Feel free to submit a new PR with an updated agent!
             
             ---
-            *This evaluation was performed automatically. Scores represent average rewards over 100 episodes against private reference implementations.*
+            *This evaluation was performed automatically. Scores represent average rewards over 500 episodes against private reference implementations.*
             `;
             
             github.rest.issues.createComment({

@@ -9,6 +9,7 @@ import sys
 import json
 import importlib.util
 import numpy as np
+import random
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any, Tuple
@@ -16,6 +17,12 @@ import warnings
 
 # Suppress warnings
 warnings.filterwarnings('ignore')
+
+try:
+    import torch
+    TORCH_AVAILABLE = True
+except ImportError:
+    TORCH_AVAILABLE = False
 
 try:
     from pettingzoo.mpe import simple_tag_v3
@@ -104,6 +111,15 @@ class SimpleTagEvaluator:
         predator_rewards = []
         
         for episode in range(num_episodes):
+            # Seed all RNGs deterministically for each episode
+            episode_seed = episode
+            np.random.seed(episode_seed)
+            random.seed(episode_seed)
+            if TORCH_AVAILABLE:
+                torch.manual_seed(episode_seed)
+                if torch.cuda.is_available():
+                    torch.cuda.manual_seed_all(episode_seed)
+            
             env = simple_tag_v3.parallel_env(
                 num_good=1,  # Number of prey
                 num_adversaries=3,  # Number of predators
@@ -112,7 +128,8 @@ class SimpleTagEvaluator:
                 continuous_actions=False
             )
             
-            observations, infos = env.reset()
+            # Seed each episode deterministically with the episode index
+            observations, infos = env.reset(seed=episode)
             
             # Initialize agents for this episode
             prey_agents = {}
@@ -246,7 +263,7 @@ def evaluate_submission(
     results = {
         "success": True,
         "student": student_submission_dir.name,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now().isoformat(),
         "prey_score": prey_results["prey_score"],
         "prey_std": prey_results["prey_std"],
         "predator_score": predator_results["predator_score"],
@@ -261,8 +278,9 @@ def evaluate_submission(
     
     print(f"\n{'='*60}")
     print(f"Evaluation complete!")
-    print(f"Prey score: {results['prey_score']:.4f} ± {results['prey_std']:.4f}")
-    print(f"Predator score: {results['predator_score']:.4f} ± {results['predator_std']:.4f}")
+    print(f"Prey score: {results['prey_score']:.4f}")
+    print(f"Predator score: {results['predator_score']:.4f}")
+    print(f"Combined score: {((results['prey_score'] + results['predator_score']) / 2):.4f}")
     print(f"Results saved to: {output_file}")
     print(f"{'='*60}\n")
     
@@ -295,7 +313,7 @@ def main():
     parser.add_argument(
         "--episodes",
         type=int,
-        default=100,
+        default=500,
         help="Number of evaluation episodes"
     )
     

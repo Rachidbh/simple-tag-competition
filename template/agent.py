@@ -66,6 +66,7 @@ class StudentAgent:
         
         # Example random policy (replace with your trained policy):
         # Action space is Discrete(5) by default
+        # Note: During evaluation, RNGs are seeded per episode for determinism
         action = np.random.randint(0, 5)
         
         return action
