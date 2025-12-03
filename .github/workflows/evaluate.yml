@@ -87,13 +87,13 @@ jobs:
             fi
           done
           
-          echo "✓ Submission structure is valid"
+          echo "  Submission structure is valid"
       
       - name: Setup reference prey agent
         run: |
           mkdir -p reference_agents
           cp reference_agents_source/prey_agent.py reference_agents/prey_agent.py
-          cp reference_agents_source/prey_final_model.zip reference_agents/prey_final_model.zip
+          cp reference_agents_source/prey_model.pth reference_agents/prey_model.pth
       
       - name: Run evaluation
         id: evaluate
@@ -162,7 +162,7 @@ jobs:
             
             | Agent Type | Score |
             |------------|-------|
-            | 🦁 Predator | ${parseFloat(predatorScore).toFixed(4)} |
+            |   Predator | ${parseFloat(predatorScore).toFixed(4)} |
             
             ### Details
             - **Episodes:** 500
@@ -171,7 +171,7 @@ jobs:
             
             ### Next Steps
             
-            ✅ Your submission has been evaluated!
+            Your submission has been evaluated!
             
             Check the [live leaderboard](https://${context.repo.owner}.github.io/${context.repo.repo}/) to see your ranking.
             
